@@ -87,7 +87,7 @@ db.articles.insertMany(articles)
     db.articles.update({title:"Title2"},{$set:{"author.name":"Sansa"}})
 
 11. rename details field to description from all articles in articles collection.
-    db.articles.updateMany({},{$rename: {"details":"description"}},{upsert:false},{many:true})
+    db.articles.updateMany({},{$rename: {"details":"description"}},{upsert:false},{multi:true})
 
 12. Add additional tag in a specific document.
     db.articles.updateOne({title:"Catalina"},{$push :{tags:"react"}})
@@ -225,7 +225,7 @@ db.users.insertMany([
 Insert above data into database to perform below queries:-
 
 - Find all males who play cricket.
-  db.users.find({gender:'Male'})
+  db.users.find({gender:'Male',sports:'cricket'})
 
 - Update user with extra golf field in sports array whose name is "Steve Ortega".
   db.users.update({name:'Steve Ortega'},{$push:{sports:"golf"}})
