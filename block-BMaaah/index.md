@@ -3,7 +3,9 @@ writeCode
 Write code to execute below expressions.
 
 1. Create a database named `blog`.
+   use blog
 2. Create a collection called 'articles'.
+   db.createCollection("articles")
 3. Insert multiple documents(at least 3) into articles. It should have fields
 
 - title as string
@@ -32,24 +34,79 @@ Write code to execute below expressions.
 }
 ```
 
+articles = [{
+... title: 'Title1',
+... details: 'Details1',
+... author: {
+... name: 'Robert',
+... email: 'robert@gmail.com',
+... age: '32'
+... },
+... tags: ['js', 'mongo']
+... },
+... {
+... title: 'Title2',
+... details: 'Details2',
+... author: {
+... name: 'John',
+... email: 'john@gmail.com',
+... age: '28'
+... },
+... tags: ['html', 'css']
+... },
+... {
+... title: 'Title3',
+... details: 'Details3',
+... author: {
+... name: 'Catalina',
+... email: 'catalina@gmail.com',
+... age: '25'
+... },
+... tags: ['js', 'express']
+... }]
+
+db.articles.insertMany(articles)
+
 4. Find all the articles using `db.COLLECTION_NAME.find()`
+   db.articles.find().pretty()
 5. Find a document using \_id field.
+   db.articles.find(ObjectId("633138aee20fbcd5578e666c")).pretty()
 6. 1. Find documents using title
+      db.articles.findOne({title: 'Title1'})
+
 7. 2. Find documents using author's name field.
+      db.articles.find({'author.name':'Robert'})
+
 8. Find document using a specific tag.
+   db.articles.find({tags:'express'})
 
 9. Update title of a document using its \_id field.
+   db.articles.update({\_id:ObjectId("633138aee20fbcd5578e666c")},{$set:{title:"Catalina"}})
+
 10. Update a author's name using article's title.
+    db.articles.update({title:"Title2"},{$set:{"author.name":"Sansa"}})
+
 11. rename details field to description from all articles in articles collection.
+    db.articles.updateMany({},{$rename: {"details":"description"}},{upsert:false},{many:true})
+
 12. Add additional tag in a specific document.
+    db.articles.updateOne({title:"Catalina"},{$push :{tags:"react"}})
 
 13. Update an article's title using $set and without $set.
+with set 
+db.articles.updateOne({title:"Catalina"},{$set:{title:"Person3"}})
+
+without set
+db.articles.updateOne({title:"Catalina"},{$set:{title:"Person3"}})
 
 - Write the differences here ?
+  using set only updates the specified field in the document while without set it updates the whole document with only that specified field.
 
 13. find an article using title and increment it's auhtor's age by 5.
+    db.articles.updateOne({title:"Person3"},{$inc:{"author.age":5}})
 
 14. Delete a document using \_id field with `db.COLLECTION_NAME.remove()`.
+    db.articles.removeOne({\_id: ObjectId("633138aee20fbcd5578e666c")})
 
 // Sample data
 
@@ -168,6 +225,13 @@ db.users.insertMany([
 Insert above data into database to perform below queries:-
 
 - Find all males who play cricket.
+  db.users.find({gender:'Male'})
+
 - Update user with extra golf field in sports array whose name is "Steve Ortega".
+  db.users.update({name:'Steve Ortega'},{$push:{sports:"golf"}})
+
 - Find all users who play either 'football' or 'cricket'.
+  db.users.find({sports:{$in:['football','cricket']}})
+
 - Find all users whose name includes 'ri' in their name.
+  db.users.find({name:{$regex:"ri"}})
